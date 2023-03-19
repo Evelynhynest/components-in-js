@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .template {
+        margin-top: 50px;
+        user-select: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 【CSS 基本实现】 -->
+    <!-- reference -->
+    <!-- <style>
+      body {
+        text-align: center;
+      }
+      .demo1-bg1 {
+        width: 100px;
+        height: 100px;
+        display: -webkit-box;
+        -webkit-box-pack: center;
+        -webkit-box-align: center;
+        margin: 50px auto;
+        background: #fff;
+        border-radius: 50%;
+        box-shadow: 0 0 0 10px red inset;
+        user-select: none;
+      }
+      .demo1-bg2-1,
+      .demo1-bg2-2 {
+        position: relative;
+        margin: 0;
+        padding: 0;
+        -webkit-box-flex: 1;
+        height: 80px;
+        background: #fff;
+        border: 10px solid grey;
+      }
+      .demo1-bg2-1 {
+        border-radius: 50px 0 0 50px;
+        border-color: grey transparent grey grey;
+        transform-origin: 100% 50%;
+        z-index: 1;
+      }
+      .demo1-bg2-2 {
+        border-radius: 0 50px 50px 0;
+        border-color: grey grey grey transparent;
+        transform-origin: 0 50%;
+        z-index: 2;
+      }
+    </style>
+    <div class="template">
+      <div class="demo1-bg1">
+        <div id="J_bg2_1" class="demo1-bg2-1"></div>
+        <div id="J_bg2_2" class="demo1-bg2-2"></div>
+      </div>
+      <input id="J_btn_1" type="text" name="" value="10" />
+      <input id="J_btn_2" type="button" name="" value="set" />
+    </div>
+    <script>
+      var bg1 = document.querySelector("#J_bg2_1");
+      var bg2 = document.querySelector("#J_bg2_2");
+      var btn1 = document.querySelector("#J_btn_1");
+      var btn2 = document.querySelector("#J_btn_2");
+
+      window.onload = rotateCircle;
+
+      btn2.onclick = rotateCircle;
+      function rotateCircle() {
+        var val = parseFloat(btn1.value).toFixed(2);
+        val = Math.max(0, val);
+        val = Math.min(100, val);
+        if (val <= 50) {
+          bg2.style.transform = "rotate(" + (180 * val * 2) / 100 + "deg)";
+          bg2.style.borderColor = "grey grey grey transparent";
+          bg1.style.transform = "rotate(0deg)";
+        } else {
+          bg2.style.transform = "rotate(0deg)";
+          bg2.style.borderColor = "red red red transparent";
+          bg1.style.transform =
+            "rotate(" + (180 * (val - 50) * 2) / 100 + "deg)";
+        }
+      }
+    </script> -->
+
+    <!-- my-version -->
+    <!-- <style>
+      body {
+        text-align: center;
+      }
+      h2 {
+        margin-top: 60px;
+      }
+
+      .annulus-bg {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 30px auto;
+        width: 80px;
+        height: 80px;
+        /* border: 10px solid tomato; */
+        border-radius: 50%;
+        /* box-shadow: 0 0 0 6px tomato inset; */
+        box-shadow: 0 0 0 10px tomato inset;
+        overflow: hidden;
+        user-select: none;
+      }
+      .annulus-bg .left,
+      .annulus-bg .right {
+        position: relative;
+        flex: 1;
+        height: 60px;
+        border: 10px solid gold;
+      }
+      .annulus-bg .left {
+        border-radius: 40px 0 0 40px;
+        border-color: gold transparent gold gold;
+        /* transform-origin: 100% 50%; */
+        transform-origin: right center;
+        /* transform: rotate(170deg); */
+        z-index: 1;
+      }
+      .annulus-bg .right {
+        border-radius: 0 40px 40px 0;
+        border-color: gold gold gold transparent;
+        /* border-color: tomato tomato tomato transparent; */
+        /* transform-origin: 0 50%; */
+        transform-origin: left center;
+        z-index: 2;
+      }
+    </style>
+    <div class="template">
+      <h2>My Version</h2>
+      <div class="annulus-bg">
+        <div id="left" class="left"></div>
+        <div id="right" class="right"></div>
+      </div>
+      <div class="annulus-control">
+        <input id="input" type="text" value="10" />
+        <input id="btn" type="button" value="set" />
+      </div>
+    </div>
+    <script>
+      const left = document.getElementById("left");
+      const right = document.getElementById("right");
+      const input = document.getElementById("input");
+      const btn = document.getElementById("btn");
+      const rotateAnnulus = () => {
+        // console.log(input.value);
+        if (input.value <= 50) {
+          right.style.transform = `rotate(${(input.value / 50) * 180}deg)`;
+        } else {
+          right.style.borderColor = "tomato tomato tomato transparent";
+          left.style.transform = `rotate(${
+            ((input.value - 50) / 50) * 180
+          }deg)`;
+        }
+      }
+      window.onload = rotateAnnulus;
+      btn.addEventListener("click", rotateAnnulus);
+    </script> -->
+
+    <!-- 【SVG 实现方法】 -->
+    <!-- reference -->
+    <!-- <style>
+      .demo2 {
+        transform-origin: 55px 55px;
+        transform: rotate(-90deg);
+        transition: stroke-dasharray 0.3s ease-in;
+      }
+    </style>
+    <div class="template">
+      <svg xmlns="http://www.w3.org/200/svg" height="150" width="110">
+        <circle
+          cx="55"
+          cy="55"
+          r="50"
+          fill="none"
+          stroke="grey"
+          stroke-width="5"
+          stroke-linecap="round"
+        />
+        <circle
+          class="demo2"
+          id="J_demo2"
+          cx="55"
+          cy="55"
+          r="50"
+          fill="none"
+          stroke="red"
+          stroke-width="5"
+          stroke-dasharray="0,10000"
+        />
+      </svg>
+      <input id="J_btn_1" type="text" name="" value="10" />
+      <input id="J_btn_2" type="button" name="" value="set" />
+    </div>
+    <script>
+      var demo2 = document.querySelector("#J_demo2");
+      var btn1 = document.querySelector("#J_btn_1");
+      var btn2 = document.querySelector("#J_btn_2");
+
+      var circleLength = Math.floor(2 * Math.PI * demo2.getAttribute("r"));
+
+      window.onload = rotateCircle;
+
+      btn2.onclick = rotateCircle;
+      function rotateCircle() {
+        var val = parseFloat(btn1.value).toFixed(2);
+        val = Math.max(0, val);
+        val = Math.min(100, val);
+        demo2.setAttribute(
+          "stroke-dasharray",
+          "" + (circleLength * val) / 100 + ",10000"
+        );
+      }
+    </script> -->
+
+    <!-- my-version -->
+    <!-- <style>
+      .annulus {
+        /* 围绕固定点进行旋转，始终相对于父元素 */
+        /* transform-origin: 0px 0px; */
+        transform-origin: 55px 55px;
+        /* 相对于自身的中心进行旋转，旋转过程中变换原点也会随之变化 */
+        /* transform-origin: center; */
+        transform: rotate(-90deg);
+        transition: stroke-dasharray 0.3s ease-in;
+      }
+    </style>
+    <div class="template">
+      <svg xmlns="http://www.w3.org/200/svg" height="150" width="150">
+        <circle
+          cx="55"
+          cy="55"
+          r="50"
+          fill="none"
+          stroke="tomato"
+          stroke-width="10"
+          stroke-linecap="round"
+        />
+        <circle
+          class="annulus"
+          id="annulus"
+          cx="55"
+          cy="55"
+          r="50"
+          fill="none"
+          stroke="gold"
+          stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="314, 10000"
+        />
+      </svg>
+      <div class="annulus-control">
+        <input id="input" type="text" value="10" />
+        <input id="btn" type="button" value="set" />
+      </div>
+    </div>
+    <script>
+      const annulus = document.getElementById("annulus");
+      const input = document.getElementById("input");
+      const btn = document.getElementById("btn");
+      const rotateAnnulus = () => {
+        let value = input.value;
+        // 避免输入值超出0-100范围
+        value = Math.max(0, value);
+        value = Math.min(100, value);
+        const radius = annulus.getAttribute("r");
+        // console.log(radius);
+        annulus.setAttribute(
+          "stroke-dasharray",
+          `${(input.value / 100) * 2 * Math.PI * radius}, 10000`
+        );
+      };
+      window.onload = rotateAnnulus;
+      btn.addEventListener("click", rotateAnnulus);
+    </script> -->
+
+    <!-- 【Canvas 实现方法】 -->
+    <!-- reference -->
+    <!-- <style></style>
+    <div class="template">
+      <canvas id="canvas" width="300" height="300"></canvas>
+    </div> -->
+    <!-- <script>
+      // draw(66);
+      // draw(66, Math.PI);
+      // draw(66, (3 / 4) * Math.PI);
+      /**
+       * [顺时针方向画图，起始点在左侧]
+       * @param  {[number]} percent [所占的进度百分比，比如66%，则传66即可，0 <= percent <= 100]
+       * @param  {[number]} sR      [圆弧起始角度，可不传，默认是π/2，Math.PI/2 <= sR < 3/2 * Math.PI]
+       */
+      /* function draw(percent, sR) {
+        if (percent < 0 || percent > 100) {
+          return;
+        }
+        if (sR < Math.PI / 2 || sR >= (3 / 2) * Math.PI) {
+          return;
+        }
+
+        var canvas = document.querySelector("#canvas"),
+          ctx = canvas.getContext("2d"),
+          cWidth = canvas.width,
+          cHeight = canvas.height,
+          baseColor = "#e1e1e1",
+          coverColor = "#fe4d43",
+          PI = Math.PI,
+          sR = sR || (1 / 2) * PI; // 默认圆弧的起始点弧度为π/2
+
+        var finalRadian = sR + ((PI + (PI - sR) * 2) * percent) / 100; // 红圈的终点弧度
+        var step = (PI + (PI - sR) * 2) / 100; // 一个1%对应的弧度大小
+        var text = 0; // 显示的数字
+        var timer = setInterval(function () {
+          ctx.clearRect(0, 0, cWidth, cHeight);
+          var endRadian = sR + text * step;
+          // 画灰色圆弧
+          drawCanvas(
+            cWidth / 2,
+            cHeight / 2,
+            80,
+            sR,
+            sR + (PI + (PI - sR) * 2),
+            baseColor,
+            2
+          );
+          // 画红色圆弧
+          drawCanvas(cWidth / 2, cHeight / 2, 80, sR, endRadian, coverColor, 2);
+
+          // 画红色圆头
+          // 红色圆头其实就是一个圆，关键的是找到其圆心，涉及到三角函数知识，自己画个图一看就明了
+          var angle = 2 * PI - endRadian; // 转换成逆时针方向的弧度（三角函数中的）
+          xPos = Math.cos(angle) * 80 + cWidth / 2; // 红色圆 圆心的x坐标
+          yPos = -Math.sin(angle) * 80 + cHeight / 2; // 红色圆 圆心的y坐标
+          drawCanvas(xPos, yPos, 2, 0, 2 * PI, coverColor, 2);
+
+          // 数字
+          ctx.fillStyle = coverColor;
+          ctx.font = "40px PT Sans";
+          var textWidth = ctx.measureText(text + "%").width;
+          ctx.fillText(
+            text + "%",
+            cWidth / 2 - textWidth / 2,
+            cHeight / 2 + 15
+          );
+          text++;
+
+          if (endRadian.toFixed(2) >= finalRadian.toFixed(2)) {
+            clearInterval(timer);
+          }
+        }, 30);
+
+        function drawCanvas(x, y, r, sRadian, eRadian, color, lineWidth) {
+          ctx.beginPath();
+          ctx.lineCap = "round";
+          ctx.strokeStyle = color;
+          ctx.lineWidth = lineWidth;
+          ctx.arc(x, y, r, sRadian, eRadian, false);
+          ctx.stroke();
+        }
+      } */
+
+      /* // 关于动画部分，可以使用requestAnimationFrame做优化，函数改写如下
+      window.requestAnimationFrame(paint);
+      function paint() {
+        ctx.clearRect(0, 0, cWidth, cHeight);
+        var endRadian = sR + text * step;
+        // 画灰色圆弧
+        drawCanvas(
+          cWidth / 2,
+          cHeight / 2,
+          80,
+          sR,
+          sR + (PI + (PI - sR) * 2),
+          baseColor,
+          2
+        );
+        // 画红色圆弧
+        drawCanvas(cWidth / 2, cHeight / 2, 80, sR, endRadian, coverColor, 2);
+
+        // 画红色圆头
+        // 红色圆头其实就是一个圆，关键的是找到其圆心，涉及到三角函数知识，自己画个图一看就明了
+        var angle = 2 * PI - endRadian; // 转换成逆时针方向的弧度（三角函数中的）
+        xPos = Math.cos(angle) * 80 + cWidth / 2; // 红色圆 圆心的x坐标
+        yPos = -Math.sin(angle) * 80 + cHeight / 2; // 红色圆 圆心的y坐标
+        drawCanvas(xPos, yPos, 2, 0, 2 * PI, coverColor, 2);
+
+        // 数字
+        ctx.fillStyle = coverColor;
+        ctx.font = "40px PT Sans";
+        var textWidth = ctx.measureText(text + "%").width;
+        ctx.fillText(text + "%", cWidth / 2 - textWidth / 2, cHeight / 2 + 15);
+        text++;
+
+        if (endRadian.toFixed(2) < finalRadian.toFixed(2)) {
+          window.requestAnimationFrame(paint);
+        }
+      }
+
+      function drawCanvas(x, y, r, sRadian, eRadian, color, lineWidth) {
+        ctx.beginPath();
+        ctx.lineCap = "round";
+        ctx.strokeStyle = color;
+        ctx.lineWidth = lineWidth;
+        ctx.arc(x, y, r, sRadian, eRadian, false);
+        ctx.stroke();
+      } */
+    </script> -->
+
+    <!-- my-version -->
+    <style></style>
+    <div class="template">
+      <canvas id="progress" width="300" height="300"></canvas>
+    </div>
+    <script>
+      const drawProgress = (percent, sR = 0) => {
+        const { PI } = Math;
+        if (percent < 0 || percent > 100) return;
+        // 0和PI的位置重叠了，所以不能取到PI
+        if (sR < 0 || sR >= PI) return;
+
+        const progress = document.getElementById("progress");
+        console.log(progress)
+        console.log(progress.getContext("2d"))
+        const ctx = progress.getContext("2d");
+        // ctx.beginPath()
+        // ctx.arc(60, 60, 50, 0, Math.PI, false);
+        // ctx.stroke();
+        const cWidth = progress.width;
+        const cHeight = progress.height;
+        const baseColor = "#e1e1e1";
+        const coverColor = "#2696ef";
+        console.log('cWidth', cWidth)
+
+        // 根据传入的百分比计算最终显示的弧长
+        // 先写死sR为0
+        const finalRadian = (PI * 2) * percent / 100;
+        console.log(finalRadian)
+        const step = (2 * PI) / 100;
+        let text = 0;
+
+        const drawCanvas = (x, y, r, sRadian, eRadian, color, lineWidth) => {
+          ctx.beginPath();
+          ctx.lineCap = 'round';
+          ctx.strokeStyle = color;
+          ctx.lineWidth = lineWidth;
+          ctx.arc(x, y, r, sRadian, eRadian, false);
+          ctx.fillStyle = 'aliceblue'
+          ctx.fill()
+          ctx.stroke();
+        }
+
+        const timer = setInterval(() => {
+          // 清除上一次绘制的内容（主要是中间的百分比数值text）
+          ctx.clearRect(0, 0, cWidth, cHeight);
+          const endRadian = step * text;
+          console.log(endRadian)
+          // 画灰色圆弧底
+          drawCanvas(cWidth / 2, cHeight / 2, 80, sR, sR + 2 * PI, baseColor, 6);
+          // 画蓝色圆弧
+          drawCanvas(cWidth / 2, cHeight / 2, 80, sR, endRadian, coverColor, 10)
+
+          // 画中间数值
+          ctx.fillStyle = coverColor;
+          ctx.font = '40px sans-serif';
+          const textWidth = ctx.measureText(text + '%').width;
+          ctx.fillText(text + '%', cWidth / 2 - textWidth / 2, cHeight / 2 + 15);
+          text++;
+
+          if(endRadian >= finalRadian) {
+            clearInterval(timer);
+          }
+        }, 50);
+        
+      };
+
+      // 开始绘制
+      drawProgress(66);
+    </script>
+  </body>
+</html>

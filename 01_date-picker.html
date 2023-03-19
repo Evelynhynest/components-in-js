@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DATE-PICKER</title>
+  </head>
+  <body>
+    <script>
+      function createPanel(year, month) {
+        // 获取当月的第一天
+        const nowMonthFirstDate = new Date(year, month - 1, 1).getDate();
+        // 获取当月的最后一天
+        const nowMonthFinalDate = new Date(year, month, 0).getDate();
+        // 声明一个数组用来存放当月日期
+        let nowMonthDays = [];
+        for (let i = nowMonthFirstDate; i <= nowMonthFinalDate; i++) {
+          nowMonthDays.push({
+            date: i,
+            isFill: false,
+          });
+        }
+        // 返回一个具体日期中一周的第几天，0代表星期日，1代表星期一，以此类推
+        let nowMonthFirstDay = new Date(year, month - 1, 1).getDay();
+        // 补齐日历中第一周上个月的日期
+        const leftDateArr = [];
+        // while (nowMonthFirstDay > 0) {
+        //   nowMonthFirstDay -= 1;
+        //   leftDateArr.push({
+        //     date: new Date(year, month - 1, -nowMonthFirstDay).getDate(),
+        //     isFill: true,
+        //   });
+        // }
+        let i = 0;
+        while (i < nowMonthFirstDay - 1) {
+          leftDateArr.push({
+            date: new Date(year, month - 1, -i).getDate(),
+            isFill: true,
+          });
+          // leftDateArr.push({
+          //   date: new Date(year, month + 1, i + 1).getDate(),
+          //   isFill: true,
+          // });
+          i++;
+        }
+        return leftDateArr;
+      }
+      // console.log(new Date(2023, 4, 1));
+      // console.log(new Date(2023, 5, 0));
+      console.log(new Date(2023, 1, -1).getDate());
+      console.log(createPanel(2023, 2));
+    </script>
+    <script>
+      const getMonthDays = function (year, month) {
+        // 获取当月的第一天的day
+        let nowDay = new Date(year, month - 1, 1).getDay();
+        // 获取当月最后一天的day
+        let nowMonthFinalDay = new Date(year, month, 0).getDay();
+
+        const leftFillArr = [];
+        const rightFillArr = [];
+        let monthDaysArr = [];
+        const result = [];
+
+        // 日历面板展示形式 0->6
+        // 日          一       二   三   四   五   六
+        // 1.30       1.31     2.1
+        //  0          1        2
+        while (nowDay > 0) {
+          // 左对齐
+          nowDay -= 1;
+          leftFillArr.push({
+            date: new Date(year, month - 1, -nowDay).getDate(),
+            isFill: true,
+          });
+        }
+
+        // 获取当月第一天
+        const nowMonthFirstDate = new Date(year, month - 1, 1).getDate();
+        // 获取当月最后一天
+        const nowMonthFinalDate = new Date(year, month, 0).getDate();
+        // 获取当月所有日期
+        for (
+          let index = nowMonthFirstDate;
+          index <= nowMonthFinalDate;
+          index++
+        ) {
+          monthDaysArr.push({
+            date: index,
+            isFill: false,
+          });
+        }
+
+        // 右侧补齐
+        if (nowMonthFinalDay != 6) {
+          for (let index = nowMonthFinalDay; index < 6; index++) {
+            rightFillArr.push({
+              date: new Date(
+                year,
+                month,
+                1 + index - nowMonthFinalDay
+              ).getDate(),
+              isFill: true,
+            });
+          }
+        }
+        // 获取完整的日期数组
+        monthDaysArr = leftFillArr.concat(monthDaysArr, rightFillArr);
+        // 控制面板是 42 or 35; 分行，5行还是6行
+        for (
+          let index = 0;
+          index < (monthDaysArr.length === 35 ? 5 : 6);
+          index++
+        ) {
+          monthDaysArr.length === 0
+            ? null
+            : (result[index] = monthDaysArr.splice(0, 7));
+        }
+        return result;
+      };
+      console.log("getMonthDays:", getMonthDays(2023, 3));
+    </script>
+  </body>
+</html>
