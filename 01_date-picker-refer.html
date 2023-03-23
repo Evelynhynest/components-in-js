@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DATE-PICKER</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html, body {
+        width: 100%;
+        height: 100%;
+      }
+      .datePicker-box {
+        width: 280px;
+        height: 280px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-sizing: border-box;
+        border: 1px solid salmon;
+        margin-top: 50px;
+        margin-left: 100px;
+      }
+      .datePicker-header, .datePicker-footer {
+        width: 100%;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .datePicker-header {
+        border-bottom: 1px solid #f0f0f0;
+      }
+      .datePicker-footer {
+        border-top: 1px solid #f0f0f0;
+      }
+      .datePicker-panel {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+      .datePicker-panel-header {
+        width: 100%;
+        height: 30px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .weekday-title {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .datePicker-panel-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      };
+      .dateItemRow {
+        width: 100%;
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+      }
+      .dateItem {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .dateItem:hover {
+        cursor: pointer;
+      }
+  </style>
+  </head>
+  <body>
+    <div class="datePicker-box">
+      <div class="datePicker-header">Header</div>
+      <div class="datePicker-panel">
+          <div class="datePicker-panel-header">
+              <div class="weekday-title">日</div>
+              <div class="weekday-title">一</div>
+              <div class="weekday-title">二</div>
+              <div class="weekday-title">三</div>
+              <div class="weekday-title">四</div>
+              <div class="weekday-title">五</div>
+              <div class="weekday-title">六</div>
+          </div>
+          <div class="datePicker-panel-body"></div>
+      </div>
+      <div class="datePicker-footer">今天</div>
+    </div>
+    <script>
+      const getMonthDays = function (year, month) {
+        // 获取当月的第一天的day
+        let nowDay = new Date(year, month - 1, 1).getDay();
+        // 获取当月最后一天的day
+        let nowMonthFinalDay = new Date(year, month, 0).getDay();
+
+        const leftFillArr = [];
+        const rightFillArr = [];
+        let monthDaysArr = [];
+        const result = [];
+
+        // 日历面板展示形式 0->6
+        // 日          一       二   三   四   五   六
+        // 1.30       1.31     2.1
+        //  0          1        2
+        while (nowDay > 0) {
+          console.log('nowDay:', nowDay)
+          // 左对齐
+          nowDay -= 1;
+          leftFillArr.push({
+            date: new Date(year, month - 1, -nowDay).getDate(),
+            isFill: true,
+          });
+        }
+
+        // 获取当月第一天
+        const nowMonthFirstDate = new Date(year, month - 1, 1).getDate();
+        // 获取当月最后一天
+        const nowMonthFinalDate = new Date(year, month, 0).getDate();
+        // 获取当月所有日期
+        for (
+          let index = nowMonthFirstDate;
+          index <= nowMonthFinalDate;
+          index++
+        ) {
+          monthDaysArr.push({
+            date: index,
+            isFill: false,
+          });
+        }
+
+        // 右侧补齐
+        if (nowMonthFinalDay != 6) {
+          for (let index = nowMonthFinalDay; index < 6; index++) {
+            rightFillArr.push({
+              date: new Date(
+                year,
+                month,
+                1 + index - nowMonthFinalDay
+              ).getDate(),
+              isFill: true,
+            });
+          }
+        }
+        // 获取完整的日期数组
+        monthDaysArr = leftFillArr.concat(monthDaysArr, rightFillArr);
+        // 控制面板是 42 or 35; 分行，5行还是6行
+        for (
+          let index = 0;
+          index < (monthDaysArr.length === 35 ? 5 : 6);
+          index++
+        ) {
+          monthDaysArr.length === 0
+            ? null
+            : (result[index] = monthDaysArr.splice(0, 7));
+        }
+        return result;
+      };
+      console.log("getMonthDays:", getMonthDays(2023, 3));
+
+      // 接下来就是如何渲染日历
+      function createDatePickerPanel (){
+        // getMonthDays的实现上面已经写过，此处省略
+        const dateArr = getMonthDays(2023, 3);
+        for (let index = 0; index < dateArr.length; index++){
+          // 创建每行div
+          const dateItemRow = document.createElement('div');
+          dateItemRow.style.flex = 1;
+          dateItemRow.style.display = 'flex';
+          dateItemRow.style.justifyContent = 'space-between';
+          dateItemRow.style.width = '100%';
+          for (let x = 0; x < dateArr[index].length; x++){
+            const dateItem = document.createElement('div');
+            dateItem.style.color = dateArr[index][x].isFill ? '#c0c4cc' : 'black';
+            dateItem.onmouseover = function () {
+              this.style.background = 'cornflowerblue';
+            }
+            dateItem.onmouseleave = function () {
+              this.style.background = null;
+            }
+            dateItem.appendChild(document.createTextNode(dateArr[index][x].date))
+            dateItem.classList.add('dateItem');
+            dateItemRow.appendChild(dateItem);
+          };
+          document.querySelector('.datePicker-panel-body').appendChild(dateItemRow);
+        };
+      };
+
+      // 创建日历组件
+      function createDatePicker (){
+        createDatePickerPanel();
+      };
+
+      createDatePicker();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DATE-PICKER</title>
+    <style>
+      .datePicker-box {
+        width: 280px;
+        height: 280px;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid orange;
+        margin: 50px auto;
+        text-align: center;
+        user-select: none;
+      }
+      .datePicker-header {
+        height: 32px;
+        line-height: 32px;
+      }
+      .datePicker-panel {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .datePicker-panel-header {
+        display: flex;
+        justify-content: space-between;
+        line-height: 32px;
+      }
+      .weekday-title {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .datePicker-panel-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .week {
+        width: 100%;
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+        text-align: center;
+      }
+      .weekday {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .weekday.light {
+        color: #bbb;
+      }
+      .weekday:hover {
+        cursor: pointer;
+        background-color: gold;
+      }
+
+      .datePicker-footer {
+        height: 32px;
+        line-height: 32px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="datePicker-box">
+      <div class="datePicker-header">Header</div>
+      <div class="datePicker-panel">
+        <div class="datePicker-panel-header">
+          <div class="weekday-title">一</div>
+          <div class="weekday-title">二</div>
+          <div class="weekday-title">三</div>
+          <div class="weekday-title">四</div>
+          <div class="weekday-title">五</div>
+          <div class="weekday-title">六</div>
+          <div class="weekday-title">日</div>
+        </div>
+        <div class="datePicker-panel-body"></div>
+      </div>
+      <div class="datePicker-footer">今天</div>
+    </div>
+    <script>
+      const getMonthDays = (year, month) => {
+        const first = new Date(year, month - 1, 1)
+        const firstDate = first.getDate()
+        const firstDay = first.getDay()
+        const lastMonthDate = []
+        if(firstDay > 1) {
+          // for(let i = firstDay - 1, day = 0; i > 0; i--) {
+          for(let i = firstDay - 1; i > 0; i--) {
+            lastMonthDate.push({
+              // date: new Date(year, month - 1, day--).getDate(),
+              date: new Date(year, month - 1, -i + 1).getDate(),
+              isThisMonth: false
+            })
+          }
+        }
+        // console.log(lastMonthDate)
+
+        // 下个月的第0天为当前月份的最后一天
+        const last = new Date(year, month, 0)
+        const lastDate = last.getDate()
+        const lastDay = last.getDay()
+        const nextMonthDate = []
+        if(lastDay < 6 && lastDay !== 0) {
+          for(let i = lastDay, day = 1; i < 7; i++) {
+            nextMonthDate.push({
+              date: new Date(year, month, day++).getDate(),
+              isThisMonth: false
+            })
+          }
+        }
+        // console.log(nextMonthDate)
+
+        const thisMonthDate = []
+        for(let i = firstDate; i <= lastDate; i++) {
+          thisMonthDate.push({
+            date: i,
+            isThisMonth: true
+          })
+        }
+        // console.log(thisMonthDate)
+
+        // const showDate = lastMonthDate.reverse().concat(thisMonthDate, nextMonthDate)
+        const showDate = lastMonthDate.concat(thisMonthDate, nextMonthDate)
+        // console.log(showDate)
+
+        const chunkSize = 7
+        // const chunkCount = Math.ceil(showDate.length / chunkSize)
+        const chunkCount = showDate.length / chunkSize
+        // console.log(chunkCount)
+        const showDateArrays = []
+        for(let i = 0; i < chunkCount; i++) {
+          showDateArrays.push(showDate.slice(i * chunkSize, (i + 1) * chunkSize))
+        }
+        // console.log(showDateArrays)
+        return showDateArrays
+      }
+      // getMonthDays(2023, 3)
+
+      const createDatePickerPanel = () => {
+        const now = new Date()
+        const nowYear = now.getFullYear()
+        const nowMonth = now.getMonth() + 1
+        const monthDays = getMonthDays(nowYear, nowMonth)
+        console.log(monthDays)
+        const panelBody = document.getElementsByClassName('datePicker-panel-body')[0]
+        monthDays.forEach((week) => {
+          const weekEl = document.createElement('div')
+          // weekEl.classList.add('week')
+          weekEl.className = 'week'
+          panelBody.appendChild(weekEl)
+          week.forEach((day) => {
+            const weekdayEl = document.createElement('div')
+            weekdayEl.className = 'weekday'
+            if(!day.isThisMonth) {
+              weekdayEl.classList.add('light')
+            }
+            weekdayEl.textContent = day.date
+            weekEl.appendChild(weekdayEl)
+          })
+        })
+      }
+
+      createDatePickerPanel()
+    </script>
+  </body>
+</html>
